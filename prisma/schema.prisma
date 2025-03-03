@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(uuid())
+  email    String    @unique
+  password String
+
+  // User has a relationship with the Calendar (many-to-many via Calendar)
+  calendars Calendar[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Holiday {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  localName   String
+  name        String
+  countryCode String
+  fixed       Boolean
+  global      Boolean
+  counties    String[]
+  launchYear  Int?
+  types       String[]
+
+  // Many-to-many relationship with users through Calendar
+  calendars Calendar[]
+
+  @@index([countryCode, date])
+}
+
+model Calendar {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  holidayId Int
+
+  // Establishing relationships
+  user      User     @relation(fields: [userId], references: [id])
+  holiday   Holiday  @relation(fields: [holidayId], references: [id])
+
+  // Adding constraints to ensure each user can only have one entry per holiday
+  @@unique([userId, holidayId])
+}
+

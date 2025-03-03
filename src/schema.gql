@@ -1,0 +1,52 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type PopulationCount {
+  year: Float!
+  value: Float!
+}
+
+type CountryPopulation {
+  populationCounts: [PopulationCount!]!
+}
+
+type CountryBorders {
+  commonName: String!
+  officialName: String!
+  countryCode: String!
+  region: String!
+  borders: [CountryBorders!]
+}
+
+type CountryInfo {
+  population: CountryPopulation
+  borders: [CountryBorders!]
+}
+
+type CountryDetails {
+  name: String!
+  flag: String!
+  iso2: String!
+  iso3: String!
+}
+
+type Holiday {
+  date: String!
+  localName: String!
+  name: String!
+  countryCode: String!
+  fixed: Boolean!
+  global: Boolean!
+  counties: [String!]
+  launchYear: Int
+  types: [String!]!
+}
+
+type Query {
+  getCountryInfo(countryCode: String!): CountryInfo!
+  getCountryPopulationByCode(countryCode: String!): CountryPopulation
+  getCountryBorders(countryCode: String!): [CountryBorders!]!
+  getCountryDetails(countryCode: String!): CountryDetails!
+  getCountryHolidays(year: String!, countryCode: String!): [Holiday!]!
+}
